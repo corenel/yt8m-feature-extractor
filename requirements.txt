@@ -1,0 +1,6 @@
+torch
+torchvision
+tensorflow-gpu
+numpy
+pafy
+youtube-dl
