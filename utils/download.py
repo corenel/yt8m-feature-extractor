@@ -34,7 +34,8 @@ if __name__ == '__main__':
     args = parse()
     for record in tf.python_io.tf_record_iterator(args.filepath):
         result = tf.train.Example.FromString(record)
-        v_id = result.features.feature["video_id"].bytes_list.value[0]
+        v_id = result.features.feature["video_id"].bytes_list.value[0].decode(
+            "utf-8")
         tags = list(result.features.feature["labels"].int64_list.value)
         url = "https://www.youtube.com/watch?v={}".format(v_id)
         print(url)
