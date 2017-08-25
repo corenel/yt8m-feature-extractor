@@ -17,10 +17,16 @@ if __name__ == '__main__':
                                  batch_size=cfg.batch_size)
 
     # extract features by inception_v3
-    features = None
-    for frames in data_loader:
+    feats = None
+    for step, frames in enumerate(data_loader):
+        print("extracting feature [{}/{}]".format(step + 1, len(data_loader)))
         feat = model(make_variable(frames))
-        features = concat_feat(features, feat.data.cpu())
+        feats = concat_feat(feats, feat.data.cpu())
 
     # recude dimensions by PCA
-    pca.fit(features.numpy())
+    X = feats.numpy()
+    print(X.shape)
+    pca.fit(X)
+    X_ = feats[0, :].numpy().reshape(1, -1)
+    print(X_.shape)
+    print(pca.transform(X_).shape)

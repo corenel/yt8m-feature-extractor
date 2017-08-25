@@ -2,10 +2,11 @@
 
 import os
 
-import skvideo.io
 import torch
 import torch.utils.data as data
 from torchvision import transforms
+
+import skvideo.io
 
 
 class VideoFrame(data.Dataset):
