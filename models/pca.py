@@ -1,5 +1,8 @@
 """Wrapper for PCA estimator."""
 
+import os
+
+import numpy as np
 from sklearn.decomposition import PCA
 
 
@@ -13,18 +16,25 @@ class PCAWrapper(object):
         self.estimator = PCA(n_components=self.n_components,
                              whiten=True)
 
-    def fit(self):
-        """Fit data."""
-        pass
+    def fit(self, X):
+        """Fit data with X."""
+        self.estimator.fit(X)
 
-    def transform(self, input):
-        """Apply dimensionality reduction to input."""
-        pass
+    def transform(self, X):
+        """Apply dimensionality reduction to X."""
+        return self.estimator.transform(X)
 
     def save_params(self, filepath):
         """Save params of PCA."""
-        pass
+        if not os.path.exists(os.path.dirname(filepath)):
+            os.makedirs(os.path.dirname(filepath))
+        params = self.estimator.save_params()
+        np.savez_compressed(filepath, params)
 
     def load_params(self, filepath):
         """Load params of PCA."""
-        pass
+        if os.path.exists(filepath):
+            params = np.load(filepath)
+            self.estimator.load_params(params)
+        else:
+            print("params doesn't exist: {}".format(filepath))
