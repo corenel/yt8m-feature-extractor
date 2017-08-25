@@ -16,3 +16,12 @@ def make_cuda(model):
     if torch.cuda.is_available():
         model = model.cuda()
     return model
+
+
+def concat_feat(src, tgt):
+    """Concatate features."""
+    if src is None:
+        out = tgt
+    else:
+        out = torch.cat([src, tgt])
+    return out

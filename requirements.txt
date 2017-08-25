@@ -5,3 +5,4 @@ numpy
 pafy
 youtube-dl
 sk-video
+scikit-learn
