@@ -6,7 +6,7 @@ import os
 import pafy
 import tensorflow as tf
 
-from reader import Reader
+from misc.reader import Reader
 
 
 def is_valid(video):
@@ -16,10 +16,10 @@ def is_valid(video):
 
 def download(video, save_dir):
     """Download videos whose urls are stored in TFRecord from Youtube-8M."""
-    print("downloading {}".format(video.title))
-    best = video.getbest(preftype="mp4")
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
+    print("downloading {}".format(video.title))
+    best = video.getbest(preftype="mp4")
     filename = best.download(filepath=save_dir)
     print("saved to {}".format(filename))
 

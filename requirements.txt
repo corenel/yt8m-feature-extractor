@@ -1,6 +1,7 @@
 torch
 torchvision
-tensorflow-gpu
+tensorflow
 numpy
 pafy
 youtube-dl
+sk-video

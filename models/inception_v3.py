@@ -8,9 +8,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.utils.model_zoo as model_zoo
 
-# __all__ = ['Inception3', 'inception_v3']
-
-
 model_urls = {
     # Inception v3 ported from TensorFlow
     'inception_v3_google': 'https://download.pytorch.org/models/'
@@ -39,7 +36,7 @@ class Inception3(nn.Module):
     """Inception3 model."""
 
     def __init__(self, num_classes=1000, aux_logits=True,
-                 transform_input=False, extract_feat=True):
+                 transform_input=False, extract_feat=False):
         """Init Inception3 model."""
         super(Inception3, self).__init__()
         self.aux_logits = aux_logits
@@ -71,6 +68,7 @@ class Inception3(nn.Module):
                 stddev = m.stddev if hasattr(m, 'stddev') else 0.1
                 X = stats.truncnorm(-2, 2, scale=stddev)
                 values = torch.Tensor(X.rvs(m.weight.data.numel()))
+                values = values.view(m.weight.data.size())
                 m.weight.data.copy_(values)
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
