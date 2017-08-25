@@ -1,22 +1,27 @@
 """Read TFRecord and download corresponding youtube video."""
 
 import argparse
+import os
 
-import numpy as np
 import pafy
 import tensorflow as tf
 
 from reader import Reader
 
 
-def is_valid(url):
+def is_valid(video):
     """Check if the video is available and longer than 3 minutes."""
-    pass
+    return video.length != -1
 
 
-def download(filepath):
+def download(video, save_dir):
     """Download videos whose urls are stored in TFRecord from Youtube-8M."""
-    pass
+    print("downloading {}".format(video.title))
+    best = video.getbest(preftype="mp4")
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    filename = best.download(filepath=save_dir)
+    print("saved to {}".format(filename))
 
 
 def parse():
@@ -37,4 +42,6 @@ if __name__ == '__main__':
     for record in tf.python_io.tf_record_iterator(args.filepath):
         result = Reader(record)
         url = "https://www.youtube.com/watch?v={}".format(result.vid)
-        print(url)
+        video = pafy.new(url)
+        if is_valid(video):
+            download(video, args.save_dir)
