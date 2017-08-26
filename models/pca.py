@@ -2,7 +2,6 @@
 
 import os
 
-import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.externals import joblib
 

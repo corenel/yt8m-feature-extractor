@@ -21,7 +21,8 @@ def download(video, save_dir, vid):
     print("downloading {}".format(video.title))
     best = video.getbest(preftype="mp4")
     filename = best.download(
-        filepath=os.path.join(save_dir, "{}.{}".format(vid, best.extension)))
+        filepath=os.path.join(save_dir,
+                              "{}.{}".format(vid, best.extension)))
     print("saved to {}".format(filename))
 
 
@@ -42,7 +43,11 @@ if __name__ == '__main__':
     args = parse()
     for record in tf.python_io.tf_record_iterator(args.filepath):
         result = Reader(record)
-        url = "https://www.youtube.com/watch?v={}".format(result.vid)
-        video = pafy.new(url)
-        if is_valid(video):
-            download(video, args.save_dir, result.vid)
+        if os.path.exists(os.path.join(args.save_dir,
+                                       "{}.mp4".format(result.vid))):
+            print("skipping {}".format(result.vid))
+        else:
+            url = "https://www.youtube.com/watch?v={}".format(result.vid)
+            video = pafy.new(url)
+            if is_valid(video):
+                download(video, args.save_dir, result.vid)
