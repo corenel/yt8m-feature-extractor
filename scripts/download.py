@@ -14,13 +14,14 @@ def is_valid(video):
     return video.length != -1
 
 
-def download(video, save_dir):
+def download(video, save_dir, vid):
     """Download videos whose urls are stored in TFRecord from Youtube-8M."""
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     print("downloading {}".format(video.title))
     best = video.getbest(preftype="mp4")
-    filename = best.download(filepath=save_dir)
+    filename = best.download(
+        filepath=os.path.join(save_dir, "{}.{}".format(vid, best.extension)))
     print("saved to {}".format(filename))
 
 
@@ -30,7 +31,7 @@ def parse():
         description="Read TFRecord and download corresponding youtube video")
     parser.add_argument('filepath',
                         help='path for TFRecord file')
-    parser.add_argument("-o", '--save-dir', default='.',
+    parser.add_argument("-o", '--save-dir', default='data',
                         help="path to save downloaded videos")
     args = parser.parse_args()
 
@@ -44,4 +45,4 @@ if __name__ == '__main__':
         url = "https://www.youtube.com/watch?v={}".format(result.vid)
         video = pafy.new(url)
         if is_valid(video):
-            download(video, args.save_dir)
+            download(video, args.save_dir, result.vid)
