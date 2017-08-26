@@ -8,6 +8,9 @@ import tensorflow as tf
 
 from misc.reader import Reader
 
+# from youtube_dl.utils import DownloadError, ExtractorError
+
+
 
 def is_valid(video):
     """Check if the video is available and longer than 3 minutes."""
@@ -19,6 +22,7 @@ def download(video, save_dir, vid):
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     print("downloading {}".format(video.title))
+
     best = video.getbest(preftype="mp4")
     filename = best.download(
         filepath=os.path.join(save_dir,
@@ -47,7 +51,11 @@ if __name__ == '__main__':
                                        "{}.mp4".format(result.vid))):
             print("skipping {}".format(result.vid))
         else:
-            url = "https://www.youtube.com/watch?v={}".format(result.vid)
-            video = pafy.new(url)
-            if is_valid(video):
-                download(video, args.save_dir, result.vid)
+            try:
+                url = "https://www.youtube.com/watch?v={}".format(result.vid)
+                video = pafy.new(url)
+                if is_valid(video):
+                    download(video, args.save_dir, result.vid)
+            except:
+                print("error occurs! skipping {}".format(result.vid))
+                continue
