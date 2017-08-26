@@ -4,6 +4,7 @@ import os
 
 import numpy as np
 from sklearn.decomposition import PCA
+from sklearn.externals import joblib
 
 
 class PCAWrapper(object):
@@ -28,13 +29,13 @@ class PCAWrapper(object):
         """Save params of PCA."""
         if not os.path.exists(os.path.dirname(filepath)):
             os.makedirs(os.path.dirname(filepath))
-        params = self.estimator.save_params()
-        np.savez_compressed(filepath, params)
+        joblib.dump(self.estimator, filepath)
+        print("save PCA params to {}".format(filepath))
 
     def load_params(self, filepath):
         """Load params of PCA."""
         if os.path.exists(filepath):
-            params = np.load(filepath)
-            self.estimator.load_params(params)
+            self.estimator = joblib.load(filepath)
+            print("load PCA params from {}".format(filepath))
         else:
-            print("params doesn't exist: {}".format(filepath))
+            print("PCA params doesn't exist in {}".format(filepath))

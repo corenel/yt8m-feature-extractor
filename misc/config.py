@@ -9,4 +9,4 @@ batch_size = 32
 
 # config for PCA
 n_components = 1024
-pca_model = "snapshots/pca_params.npz"
+pca_model = "snapshots/pca_params.pkl"
