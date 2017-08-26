@@ -25,8 +25,4 @@ if __name__ == '__main__':
 
     # recude dimensions by PCA
     X = feats.numpy()
-    print(X.shape)
     pca.fit(X)
-    X_ = feats[0, :].numpy().reshape(1, -1)
-    print(X_.shape)
-    print(pca.transform(X_).shape)
