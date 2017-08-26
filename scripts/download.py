@@ -31,7 +31,7 @@ def parse():
         description="Read TFRecord and download corresponding youtube video")
     parser.add_argument('filepath',
                         help='path for TFRecord file')
-    parser.add_argument("-o", '--save-dir', default='data',
+    parser.add_argument("-o", '--save-dir', default='data/videos/',
                         help="path to save downloaded videos")
     args = parser.parse_args()
 

@@ -1,12 +1,11 @@
-"""Dummy Dataset and data loader for Youtube-8M."""
+"""Dummy Dataset and data loader for frames in single video."""
 
 import os
 
+import skvideo.io
 import torch
 import torch.utils.data as data
 from torchvision import transforms
-
-import skvideo.io
 
 
 class VideoFrame(data.Dataset):
@@ -45,21 +44,3 @@ class VideoFrame(data.Dataset):
             self.num_frames = self.frames.shape[0]
         else:
             print("video file doesn't exist: {}".format(self.filepath))
-
-
-def get_dataloader(filepath, num_frames, batch_size):
-    """Get VideoFrame dataset loader."""
-    # image pre-processing
-    pre_process = transforms.Compose([transforms.ToPILImage(),
-                                      transforms.Scale([299, 299]),
-                                      transforms.ToTensor()])
-
-    # dataset and data loader
-    frame_dataset = VideoFrame(filepath, num_frames, pre_process)
-
-    frame_data_loader = torch.utils.data.DataLoader(
-        dataset=frame_dataset,
-        batch_size=batch_size,
-        shuffle=True)
-
-    return frame_data_loader
