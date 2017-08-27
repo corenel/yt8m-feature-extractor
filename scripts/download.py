@@ -11,7 +11,6 @@ from misc.reader import Reader
 # from youtube_dl.utils import DownloadError, ExtractorError
 
 
-
 def is_valid(video):
     """Check if the video is available and longer than 3 minutes."""
     return video.length != -1
@@ -45,17 +44,24 @@ def parse():
 
 if __name__ == '__main__':
     args = parse()
-    for record in tf.python_io.tf_record_iterator(args.filepath):
-        result = Reader(record)
-        if os.path.exists(os.path.join(args.save_dir,
-                                       "{}.mp4".format(result.vid))):
-            print("skipping {}".format(result.vid))
-        else:
-            try:
-                url = "https://www.youtube.com/watch?v={}".format(result.vid)
-                video = pafy.new(url)
-                if is_valid(video):
-                    download(video, args.save_dir, result.vid)
-            except:
-                print("error occurs! skipping {}".format(result.vid))
-                continue
+    for record_file in os.listdir(args.filepath):
+        record_iterator = tf.python_io.tf_record_iterator(
+            os.path.join(args.filepath, record_file))
+        idx = 0
+        while idx <= 1:
+            record = next(record_iterator)
+            result = Reader(record)
+            if os.path.exists(
+                    os.path.join(args.save_dir, "{}.mp4".format(result.vid))):
+                print("skipping {}".format(result.vid))
+            else:
+                try:
+                    url = "https://www.youtube.com/watch?v={}".format(
+                        result.vid)
+                    video = pafy.new(url)
+                    if is_valid(video):
+                        download(video, args.save_dir, result.vid)
+                        idx += 1
+                except:
+                    print("error occurs! skipping {}".format(result.vid))
+                    continue
