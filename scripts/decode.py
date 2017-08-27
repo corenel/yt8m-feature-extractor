@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import subprocess
 
 from scipy.misc import imsave
 
@@ -21,6 +22,15 @@ def parse():
     args = parser.parse_args()
 
     return args
+
+
+def get_frame_rate(filepath):
+    """Get frame rate of video file."""
+    fps = subprocess.check_output(
+        "ffmpeg -i {} 2>&1 | sed -n 's/.*, \(.*\) fp.*/\1/p'".format(filepath),
+        stderr=subprocess.STDOUT,
+        shell=True)
+    return int(fps)
 
 
 def decode(filepath, num_frames, save_dir):
