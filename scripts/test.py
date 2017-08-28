@@ -2,6 +2,7 @@
 
 import os
 
+import init_path
 import misc.config as cfg
 from misc.utils import get_dataloader, make_cuda, make_variable
 from misc.writer import RecordWriter

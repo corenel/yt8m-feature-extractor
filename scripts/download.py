@@ -6,6 +6,7 @@ import os
 import pafy
 import tensorflow as tf
 
+import init_path
 from misc.reader import Reader
 
 # from youtube_dl.utils import DownloadError, ExtractorError

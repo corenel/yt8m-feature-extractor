@@ -1,5 +1,6 @@
 """Train script for Youtube-8M feature extractor."""
 
+import init_path
 import misc.config as cfg
 from misc.utils import concat_feat, get_dataloader, make_cuda, make_variable
 from models import PCAWrapper, inception_v3

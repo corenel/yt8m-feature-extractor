@@ -5,6 +5,7 @@ import os
 
 import tensorflow as tf
 
+import init_path
 from misc.reader import Reader
 
 
@@ -25,9 +26,7 @@ if __name__ == '__main__':
         print("checking record file: {}".format(record_file))
         record_iterator = tf.python_io.tf_record_iterator(
             os.path.join(args.filepath, record_file))
-        for idx, record in enumerate(record_iterator):
+        for record in record_iterator:
             result = Reader(record)
-            print("--> checking {} [{}/{}]".format(result.vid,
-                                                   idx + 1,
-                                                   len(record_iterator)))
+            # print("--> checking {}".format(result.vid))
     print("All checked!")
