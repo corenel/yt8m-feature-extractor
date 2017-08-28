@@ -10,3 +10,6 @@ batch_size = 32
 # config for PCA
 n_components = 1024
 pca_model = "snapshots/pca_params.pkl"
+
+# config for extracted features
+extract_feat_path = "data/extracted.tfrecord"

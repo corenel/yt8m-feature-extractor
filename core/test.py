@@ -1,15 +1,20 @@
 """Test script for Youtube-8M feature extractor."""
 
+import os
+
 import misc.config as cfg
 from misc.utils import concat_feat, get_dataloader, make_cuda, make_variable
+from misc.writer import RecordWriter
 from models import PCAWrapper, inception_v3
 
 if __name__ == '__main__':
-    # init models
+    # init Inception v3 model
     model = make_cuda(inception_v3(pretrained=True,
                                    transform_input=True,
                                    extract_feat=True))
     model.eval()
+
+    # init PCA model
     pca = PCAWrapper(n_components=cfg.n_components)
     pca.load_params(filepath=cfg.pca_model)
 
@@ -19,14 +24,19 @@ if __name__ == '__main__':
                                  num_frames=cfg.num_frames,
                                  batch_size=cfg.batch_size)
 
+    # init writer
+    writer = RecordWriter(filepath=cfg.extract_feat_path, level="frame")
+
     # extract features by inception_v3
-    feats = None
+    feats = []
     for step, frames in enumerate(data_loader):
         print("extracting feature [{}/{}]".format(step + 1, len(data_loader)))
         feat = model(make_variable(frames))
-        feats = concat_feat(feats, feat.data.cpu())
+        # recude dimensions by PCA
+        feat_ = pca.transform(feat.data.cpu().numpy())
+        feats.append(feat_)
 
-    # recude dimensions by PCA
-    X = feats.numpy()
-    X_ = pca.transform(X)
-    print("reduce X {} to X_ {}".format(X.shape, X_.shape))
+    # write features into TFRecord
+    vid = os.path.splitext(os.path.basename(cfg.video_file))[0]
+    writer.write(vid=vid, feat_rgb=feats)
+    writer.close()
