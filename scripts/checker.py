@@ -22,8 +22,11 @@ def parse():
 
 if __name__ == '__main__':
     args = parse()
-    for record_file in os.listdir(args.filepath):
-        print("checking record file: {}".format(record_file))
+    for idx, record_file in enumerate(os.listdir(args.filepath)):
+        print("checking record file: {} [{}/{}]".format(
+            record_file,
+            idx + 1,
+            len(os.listdir(args.filepath))))
         record_iterator = tf.python_io.tf_record_iterator(
             os.path.join(args.filepath, record_file))
         for record in record_iterator:
