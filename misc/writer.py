@@ -1,6 +1,5 @@
 """Writer for Youtube-8M dataset."""
 
-import numpy as np
 import tensorflow as tf
 
 from misc.utils import encode

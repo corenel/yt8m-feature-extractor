@@ -12,11 +12,6 @@ if __name__ == '__main__':
     pca = PCAWrapper(n_components=cfg.n_components)
     model.eval()
 
-    # data loader for frames in ingle video
-    # data_loader = get_dataloader(dataset="VideoFrame",
-    #                              path=cfg.video_file,
-    #                              num_frames=cfg.num_frames,
-    #                              batch_size=cfg.batch_size)
     # data loader for frames decoded from several videos
     data_loader = get_dataloader(dataset="FrameImage",
                                  path=cfg.frame_root,

@@ -3,7 +3,7 @@
 import os
 
 import misc.config as cfg
-from misc.utils import concat_feat, get_dataloader, make_cuda, make_variable
+from misc.utils import get_dataloader, make_cuda, make_variable
 from misc.writer import RecordWriter
 from models import PCAWrapper, inception_v3
 
