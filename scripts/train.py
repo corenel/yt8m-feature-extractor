@@ -2,7 +2,8 @@
 
 import init_path
 import misc.config as cfg
-from misc.utils import concat_feat, get_dataloader, make_cuda, make_variable
+from misc.utils import (concat_feat_var, get_dataloader, make_cuda,
+                        make_variable)
 from models import PCAWrapper, inception_v3
 
 if __name__ == '__main__':
@@ -23,7 +24,7 @@ if __name__ == '__main__':
     for step, frames in enumerate(data_loader):
         print("extracting feature [{}/{}]".format(step + 1, len(data_loader)))
         feat = model(make_variable(frames))
-        feats = concat_feat(feats, feat.data.cpu())
+        feats = concat_feat_var(feats, feat.data.cpu())
 
     # train PCA
     X = feats.numpy()

@@ -28,7 +28,7 @@ class RecordWriter(object):
 
             # Non-serial data uses Feature
             context = tf.train.Features(feature={
-                "video_id": self._bytes_feature(self.vid.encode()),
+                "video_id": self._bytes_feature(vid.encode()),
                 # "labels": self._int64_feature(labels)
             })
             # Serial data uses FeatureLists
@@ -41,7 +41,7 @@ class RecordWriter(object):
         elif self.level == "video":
             #  Non-serial data uses Feature
             features = tf.train.Features(feature={
-                "video_id": self._bytes_feature(self.vid.encode()),
+                "video_id": self._bytes_feature(vid.encode()),
                 # "labels": self._int64_feature(labels),
                 "mean_rgb": self._float_feature(feat_rgb),
                 # "mean_audio": self._float_feature(feat_audio),

@@ -32,6 +32,15 @@ def concat_feat(src, tgt):
     return out
 
 
+def concat_feat_var(src, tgt):
+    """Concatate feature variable."""
+    if src is None:
+        out = tgt
+    else:
+        out = torch.cat([src, tgt])
+    return out
+
+
 def get_dataloader(dataset, path, num_frames=360, batch_size=32):
     """Get dataset loader."""
     # get dataset

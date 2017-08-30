@@ -2,7 +2,7 @@
 
 # config for dataset
 video_root = "data/videos"
-frame_root = "data/frames"
+frame_root = "/media/m/E/video/frame"
 video_file = "data/videos/00_5y0D1Y1w.mp4"
 num_frames = 300
 batch_size = 32
