@@ -106,7 +106,7 @@ def encode(feat_vector, max_quantized_value=2, min_quantized_value=-2):
                            min_quantized_value)
     feat_list = []
     for idx in range(feat_vector.shape[0]):
-        feat_list.append(feat_vector[idx, :].astype(np.uint8).tostring())
+        feat_list.append(feat_vector[idx, :].astype(np.uint8).tobytes())
     return feat_list
 
 

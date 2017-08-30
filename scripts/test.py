@@ -33,8 +33,9 @@ if __name__ == '__main__':
     for step, frames in enumerate(data_loader):
         print("extracting feature [{}/{}]".format(step + 1, len(data_loader)))
         feat = model(make_variable(frames))
+        feat_np = feat.data.cpu().numpy()
         # recude dimensions by PCA
-        feat_ = pca.transform(feat.data.cpu().numpy())
+        feat_ = pca.transform(feat_np)
         feats = concat_feat(feats, feat_)
 
     # write features into TFRecord
