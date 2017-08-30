@@ -23,17 +23,17 @@ class RecordWriter(object):
         """Write features into TFRecord."""
         if self.level == "frame":
             # quantize features
-            feat_rgb = [encode(f) for f in feat_rgb]
+            feat_rgb_encoded = encode(feat_rgb)
             # feat_audio = [encode(f) for f in feat_audio]
 
             # Non-serial data uses Feature
             context = tf.train.Features(feature={
-                "video_id": self._bytes_feature(vid.encode()),
+                "video_id": self._bytes_feature(self.vid.encode()),
                 # "labels": self._int64_feature(labels)
             })
             # Serial data uses FeatureLists
             feature_lists = tf.train.FeatureLists(feature_list={
-                "rgb": self._bytes_feature_list(feat_rgb),
+                "rgb": self._bytes_feature_list(feat_rgb_encoded),
                 # "audio": self._bytes_feature_list(feat_audio)
             })
             self.example = tf.train.SequenceExample(
@@ -73,7 +73,7 @@ class RecordWriter(object):
     def _bytes_feature(self, value):
         """Wrapper for inserting a bytes Feature into a SequenceExample proto.
 
-        e.g, an image in byte
+        e.g, rgb or audio feature (1024 8bit quantized features)
         """
         return tf.train.Feature(bytes_list=tf.train.BytesList(value=[value]))
 
@@ -96,7 +96,7 @@ class RecordWriter(object):
     def _bytes_feature_list(self, values):
         """Wrapper for inserting a bytes FeatureList into a SequenceExample proto.
 
-        e.g, sentence in list of bytes
+        e.g, rgb or audio features
         """
         return tf.train.FeatureList(
             feature=[self._bytes_feature(v) for v in values])

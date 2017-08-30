@@ -4,7 +4,7 @@ import os
 
 import init_path
 import misc.config as cfg
-from misc.utils import get_dataloader, make_cuda, make_variable
+from misc.utils import concat_feat, get_dataloader, make_cuda, make_variable
 from misc.writer import RecordWriter
 from models import PCAWrapper, inception_v3
 
@@ -29,13 +29,13 @@ if __name__ == '__main__':
     writer = RecordWriter(filepath=cfg.extract_feat_path, level="frame")
 
     # extract features by inception_v3
-    feats = []
+    feats = None
     for step, frames in enumerate(data_loader):
         print("extracting feature [{}/{}]".format(step + 1, len(data_loader)))
         feat = model(make_variable(frames))
         # recude dimensions by PCA
         feat_ = pca.transform(feat.data.cpu().numpy())
-        feats.append(feat_)
+        feats = concat_feat(feats, feat_)
 
     # write features into TFRecord
     vid = os.path.splitext(os.path.basename(cfg.video_file))[0]

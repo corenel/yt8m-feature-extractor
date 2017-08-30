@@ -28,7 +28,7 @@ def concat_feat(src, tgt):
     if src is None:
         out = tgt
     else:
-        out = torch.cat([src, tgt])
+        out = np.concatenate([src, tgt])
     return out
 
 
@@ -95,7 +95,10 @@ def encode(feat_vector, max_quantized_value=2, min_quantized_value=-2):
     feat_vector = quantize(feat_vector,
                            max_quantized_value,
                            min_quantized_value)
-    return feat_vector.astype(np.uint8).tobytes()
+    feat_list = []
+    for idx in range(feat_vector.shape[0]):
+        feat_list.append(feat_vector[idx, :].astype(np.uint8).tostring())
+    return feat_list
 
 
 def resize_axis(tensor, axis, new_size, fill_value=0):
