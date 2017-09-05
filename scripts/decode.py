@@ -4,11 +4,11 @@ import argparse
 import os
 import subprocess
 
-import skvideo.io
 from scipy.misc import imsave
 
 import init_path
 import misc.config as cfg
+import skvideo.io
 
 
 def parse():
@@ -61,8 +61,16 @@ def decode(filepath, num_frames, save_dir):
 
 if __name__ == '__main__':
     args = parse()
-    for video_file in os.listdir(args.filepath):
+    file_list = os.listdir(args.filepath)
+    for step, video_file in enumerate(file_list):
         if os.path.splitext(video_file)[1] in cfg.video_ext:
-            decode(os.path.join(args.filepath, video_file),
-                   args.num_frames,
-                   args.save_dir)
+            print("=== Processing {} [{}/{}]".format(video_file,
+                                                     step + 1,
+                                                     len(file_list)))
+            try:
+                decode(os.path.join(args.filepath, video_file),
+                       args.num_frames,
+                       args.save_dir)
+            except ValueError:
+                print("skip truncated video file: {}".format(video_file))
+                continue
