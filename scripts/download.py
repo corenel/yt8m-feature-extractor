@@ -46,11 +46,8 @@ def parse():
 if __name__ == '__main__':
     args = parse()
     for record_file in os.listdir(args.filepath):
-        record_iterator = tf.python_io.tf_record_iterator(
-            os.path.join(args.filepath, record_file))
-        idx = 0
-        while idx <= 1:
-            record = next(record_iterator)
+        for record in tf.python_io.tf_record_iterator(
+                os.path.join(args.filepath, record_file)):
             result = Reader(record)
             if os.path.exists(
                     os.path.join(args.save_dir, "{}.mp4".format(result.vid))):
@@ -62,7 +59,6 @@ if __name__ == '__main__':
                     video = pafy.new(url)
                     if is_valid(video):
                         download(video, args.save_dir, result.vid)
-                        idx += 1
                 except:
                     print("error occurs! skipping {}".format(result.vid))
                     continue

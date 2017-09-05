@@ -1,5 +1,7 @@
 """Train script for Youtube-8M feature extractor."""
 
+import torch
+
 import init_path
 import misc.config as cfg
 from misc.utils import (concat_feat_var, get_dataloader, make_cuda,
@@ -25,6 +27,9 @@ if __name__ == '__main__':
         print("extracting feature [{}/{}]".format(step + 1, len(data_loader)))
         feat = model(make_variable(frames))
         feats = concat_feat_var(feats, feat.data.cpu())
+
+        if (step + 1) % cfg.save_step:
+            torch.save(feats, cfg.inception_v3_feats_path.format(step + 1))
 
     # train PCA
     X = feats.numpy()

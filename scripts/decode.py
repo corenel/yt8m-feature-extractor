@@ -4,9 +4,11 @@ import argparse
 import os
 import subprocess
 
+import skvideo.io
 from scipy.misc import imsave
 
-import skvideo.io
+import init_path
+import misc.config as cfg
 
 
 def parse():
@@ -47,15 +49,20 @@ def decode(filepath, num_frames, save_dir):
         filename = os.path.splitext(os.path.basename(filepath))[0]
 
         for idx, frame in enumerate(videogen):
-            print("decoding {}-{}".format(filename, idx))
-            imsave(os.path.join(save_dir, "{}-{}.jpg".format(filename, idx)),
-                   frame)
+            save_path = os.path.join(
+                save_dir, "{}-{}.jpg".format(filename, idx))
+            if (os.path.exists(save_path)):
+                print("skipping {}-{}".format(filename, idx))
+                continue
+            else:
+                print("decoding {}-{}".format(filename, idx))
+                imsave(save_path, frame)
 
 
 if __name__ == '__main__':
     args = parse()
     for video_file in os.listdir(args.filepath):
-        if os.path.splitext(video_file)[1] == ".mp4":
+        if os.path.splitext(video_file)[1] in cfg.video_ext:
             decode(os.path.join(args.filepath, video_file),
                    args.num_frames,
                    args.save_dir)
