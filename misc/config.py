@@ -3,14 +3,14 @@
 import os
 
 # general
-root = "/media/m/F1/download/"
+root = "/media/m/E/download/"
 
 # config for dataset
 video_ext = [".mp4"]
 video_root = os.path.join(root, "video")
 frame_root = os.path.join(root, "frame")
 record_root = os.path.join(root, "tf")
-video_file = os.path.join(video_root, "005Go8GHXNI.mp4")
+video_file = os.path.join("data/videos/005Go8GHXNI.mp4")
 num_frames = 300
 batch_size = 32
 

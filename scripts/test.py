@@ -27,7 +27,8 @@ if __name__ == '__main__':
                                  batch_size=cfg.batch_size)
 
     # init writer
-    writer = RecordWriter(filepath=cfg.extract_feat_path, level="frame")
+    writer = RecordWriter(filepath="data/test.tfrecord",
+                          level="frame")
 
     # extract features by inception_v3
     feats = None

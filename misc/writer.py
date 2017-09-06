@@ -29,7 +29,7 @@ class RecordWriter(object):
             # Non-serial data uses Feature
             context = tf.train.Features(feature={
                 "video_id": self._bytes_feature(vid.encode()),
-                # "labels": self._int64_feature(labels)
+                "labels": self._int64_list_feature(labels)
             })
             # Serial data uses FeatureLists
             feature_lists = tf.train.FeatureLists(feature_list={
@@ -62,6 +62,13 @@ class RecordWriter(object):
         e.g, An integer label.
         """
         return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
+
+    def _int64_list_feature(self, values):
+        """Wrapper for inserting an int64 list Feature into a SequenceExample proto.
+
+        e.g, An list of integer labels.
+        """
+        return tf.train.Feature(int64_list=tf.train.Int64List(value=values))
 
     def _float_feature(self, value):
         """Wrapper for inserting a float Feature into a SequenceExample proto.

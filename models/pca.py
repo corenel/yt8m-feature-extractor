@@ -17,7 +17,8 @@ class PCAWrapper(object):
         self.n_components = n_components
         self.batch_size = batch_size
         self.estimator = IncrementalPCA(n_components=self.n_components,
-                             whiten=True, batch_size=self.batch_size)
+                                        whiten=True,
+                                        batch_size=self.batch_size)
 
     def fit(self, X):
         """Fit data with X."""
