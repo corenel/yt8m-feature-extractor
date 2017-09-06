@@ -22,6 +22,7 @@ inception_v3_feats_path = os.path.join(inception_v3_feats_root, "{}.pt")
 
 # config for PCA
 n_components = 1024
+pca_batch_size = 4096
 pca_model = os.path.join(root, "snapshots", "pca_params.pkl")
 
 # config for extracted features

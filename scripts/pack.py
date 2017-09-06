@@ -39,21 +39,29 @@ if __name__ == '__main__':
         for record in tf.python_io.tf_record_iterator(
                 os.path.join(cfg.record_root, record_file)):
             result = Reader(record)
-            print("extracting {} - labels {}".format(result.vid,
-                                                     result.labels))
-            print("--> load fatures")
-            feats = torch.load(
-                cfg.inception_v3_feats_path.format(result.vid))
-            print("--> recude dimensions by PCA")
-            feats_ = pca.transform(feats.numpy())
-            print("--> write to tfrecord")
-            writer.write(vid=result.vid, feat_rgb=feats_, labels=result.labels)
 
-            if (save_counter + 1) % cfg.feats_per_file == 0:
-                print(">>> saving tfrecord: {}"
-                      .format(cfg.extract_feat_path.format(save_counter)))
-                writer.close()
-                save_counter += 1
-                writer = RecordWriter(
-                    filepath=cfg.extract_feat_path.format(save_counter),
-                    level="frame")
+            if not os.path.exists(
+                    cfg.inception_v3_feats_path.format(result.vid)):
+                print("skipping {}".format(result.vid))
+                continue
+            else:
+                print("extracting {} - labels {}".format(result.vid,
+                                                         result.labels))
+                print("--> load fatures")
+                feats = torch.load(
+                    cfg.inception_v3_feats_path.format(result.vid))
+                print("--> recude dimensions by PCA")
+                feats_ = pca.transform(feats.numpy())
+                print("--> write to tfrecord")
+                writer.write(vid=result.vid,
+                             feat_rgb=feats_,
+                             labels=result.labels)
+
+                if (save_counter + 1) % cfg.feats_per_file == 0:
+                    print(">>> saving tfrecord: {}"
+                          .format(cfg.extract_feat_path.format(save_counter)))
+                    writer.close()
+                    save_counter += 1
+                    writer = RecordWriter(
+                        filepath=cfg.extract_feat_path.format(save_counter),
+                        level="frame")

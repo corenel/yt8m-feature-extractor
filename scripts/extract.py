@@ -25,18 +25,21 @@ if __name__ == '__main__':
 
     # extract features by inception_v3
     for idx, vid in enumerate(video_list):
-        print("extract feature from {} [{}/{}]".format(vid, idx + 1,
-                                                       len(video_list)))
-        # data loader for frames decoded from several videos
-        data_loader = get_dataloader(dataset="FrameImage",
-                                     path=cfg.frame_root,
-                                     batch_size=cfg.batch_size,
-                                     vid=vid)
-        feats = None
-        for step, frames in enumerate(data_loader):
-            print("--> step [{}/{}]".format(step + 1,
-                                            len(data_loader)))
-            feat = model(make_variable(frames))
-            feats = concat_feat_var(feats, feat.data.cpu())
+        if os.path.exists(cfg.inception_v3_feats_path.format(vid)):
+            print("skip {}".format(vid))
+        else:
+            print("extract feature from {} [{}/{}]".format(vid, idx + 1,
+                                                           len(video_list)))
+            # data loader for frames decoded from several videos
+            data_loader = get_dataloader(dataset="FrameImage",
+                                         path=cfg.frame_root,
+                                         batch_size=cfg.batch_size,
+                                         vid=vid)
+            feats = None
+            for step, frames in enumerate(data_loader):
+                print("--> step [{}/{}]".format(step + 1,
+                                                len(data_loader)))
+                feat = model(make_variable(frames))
+                feats = concat_feat_var(feats, feat.data.cpu())
 
-        torch.save(feats, cfg.inception_v3_feats_path.format(vid))
+            torch.save(feats, cfg.inception_v3_feats_path.format(vid))

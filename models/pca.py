@@ -1,8 +1,8 @@
-"""Wrapper for PCA estimator."""
+"""Wrapper for Incremental 2017-09-06 ATDA & Yt8M.pptxPCA estimator."""
 
 import os
 
-from sklearn.decomposition import PCA
+from sklearn.decomposition import IncrementalPCA
 from sklearn.externals import joblib
 
 # import pickle
@@ -11,12 +11,13 @@ from sklearn.externals import joblib
 class PCAWrapper(object):
     """Wrapper for PCA estimator."""
 
-    def __init__(self, n_components):
+    def __init__(self, n_components, batch_size):
         """Init PCA."""
         super(PCAWrapper, self).__init__()
         self.n_components = n_components
-        self.estimator = PCA(n_components=self.n_components,
-                             whiten=True)
+        self.batch_size = batch_size
+        self.estimator = IncrementalPCA(n_components=self.n_components,
+                             whiten=True, batch_size=self.batch_size)
 
     def fit(self, X):
         """Fit data with X."""
