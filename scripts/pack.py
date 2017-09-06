@@ -30,6 +30,7 @@ if __name__ == '__main__':
     # extract features
     print("=== extract features ===")
     save_counter = 0
+    feat_counter = 0
     writer = RecordWriter(
         filepath=cfg.extract_feat_path.format(save_counter),
         level="frame")
@@ -57,12 +58,14 @@ if __name__ == '__main__':
                 writer.write(vid=result.vid,
                              feat_rgb=feats_,
                              labels=result.labels)
+                feat_counter += 1
 
-                if (save_counter + 1) % cfg.feats_per_file == 0:
+                if (feat_counter + 1) % cfg.feats_per_file == 0:
                     print(">>> saving tfrecord: {}"
                           .format(cfg.extract_feat_path.format(save_counter)))
                     writer.close()
                     save_counter += 1
+                    feat_counter = 0
                     writer = RecordWriter(
                         filepath=cfg.extract_feat_path.format(save_counter),
                         level="frame")

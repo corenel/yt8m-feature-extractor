@@ -26,5 +26,6 @@ pca_batch_size = 4096
 pca_model = os.path.join(root, "snapshots", "pca_params.pkl")
 
 # config for extracted features
-extract_feat_path = os.path.join(root, "extracted_feats", "train-{}.tfrecord")
-feats_per_file = 100
+extract_feat_path = os.path.join(
+    root, "extracted_feats", "train-{:0004}.tfrecord")
+feats_per_file = 300
