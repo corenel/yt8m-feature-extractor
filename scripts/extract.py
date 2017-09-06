@@ -15,7 +15,6 @@ if __name__ == '__main__':
     model = make_cuda(inception_v3(pretrained=True,
                                    transform_input=True,
                                    extract_feat=True))
-    pca = PCAWrapper(n_components=cfg.n_components)
     model.eval()
 
     # get vid list

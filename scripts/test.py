@@ -16,7 +16,8 @@ if __name__ == '__main__':
     model.eval()
 
     # init PCA model
-    pca = PCAWrapper(n_components=cfg.n_components)
+    pca = PCAWrapper(n_components=cfg.n_components,
+                     batch_size=cfg.pca_batch_size)
     pca.load_params(filepath=cfg.pca_model)
 
     # data loader for frames in ingle video

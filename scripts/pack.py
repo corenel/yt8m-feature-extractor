@@ -15,7 +15,8 @@ from models import PCAWrapper
 if __name__ == '__main__':
     # init PCA model
     print("=== init PCA model ===")
-    pca = PCAWrapper(n_components=cfg.n_components)
+    pca = PCAWrapper(n_components=cfg.n_components,
+                     batch_size=cfg.pca_batch_size)
     pca.load_params(filepath=cfg.pca_model)
 
     # get record list
