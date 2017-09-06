@@ -24,7 +24,7 @@ class Reader(object):
         result = tf.train.Example.FromString(record)
         feature = result.features.feature
         self.vid = feature["video_id"].bytes_list.value[0].decode("utf-8")
-        self.labels = np.array(list(feature["labels"].int64_list.value))
+        self.labels = list(feature["labels"].int64_list.value)
         self.feat_rgb = np.array(list(feature["mean_rgb"].float_list.value))
         self.feat_audio = np.array(
             list(feature["mean_audio"].float_list.value))

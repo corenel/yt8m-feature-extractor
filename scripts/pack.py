@@ -2,54 +2,58 @@
 
 import os
 
+import tensorflow as tf
+import torch
+
 import init_path
 import misc.config as cfg
+from misc.reader import Reader
 from misc.utils import concat_feat, get_dataloader, make_cuda, make_variable
 from misc.writer import RecordWriter
-from models import PCAWrapper, inception_v3
+from models import PCAWrapper
 
 if __name__ == '__main__':
-    # init Inception v3 model
-    model = make_cuda(inception_v3(pretrained=True,
-                                   transform_input=True,
-                                   extract_feat=True))
-    model.eval()
-
     # init PCA model
+    print("=== init PCA model ===")
     pca = PCAWrapper(n_components=cfg.n_components)
     pca.load_params(filepath=cfg.pca_model)
 
-    # iterate all videos
-    writer = None
-    for idx, filename in os.listdir(cfg.video_root):
-        # check if it's a video file
-        if not os.path.splitext(filename)[1] in cfg.video_ext:
-            continue
+    # get record list
+    print("=== get recorf list ===")
+    print("find record file in: {}".format(cfg.record_root))
+    record_list = os.listdir(cfg.record_root)
+    record_list = [r for r in record_list
+                   if os.path.splitext(r)[1] == ".tfrecord"]
+    print("total files: {}".format(len(record_list)))
 
-        # init writer
-        if (idx + 1) % cfg.feats_per_file == 0:
-            if writer is not None:
+    # extract features
+    print("=== extract features ===")
+    save_counter = 0
+    writer = RecordWriter(
+        filepath=cfg.extract_feat_path.format(save_counter),
+        level="frame")
+    for idx, record_file in enumerate(record_list):
+        print(">>> reading record file: {} [{}/{}]".format(record_file,
+                                                           idx + 1,
+                                                           len(record_file)))
+        for record in tf.python_io.tf_record_iterator(
+                os.path.join(cfg.record_root, record_file)):
+            result = Reader(record)
+            print("extracting {} - labels {}".format(result.vid,
+                                                     result.labels))
+            print("--> load fatures")
+            feats = torch.load(
+                cfg.inception_v3_feats_path.format(result.vid))
+            print("--> recude dimensions by PCA")
+            feats_ = pca.transform(feats.numpy())
+            print("--> write to tfrecord")
+            writer.write(vid=result.vid, feat_rgb=feats_, labels=result.labels)
+
+            if (save_counter + 1) % cfg.feats_per_file == 0:
+                print(">>> saving tfrecord: {}"
+                      .format(cfg.extract_feat_path.format(save_counter)))
                 writer.close()
-            writer = RecordWriter(
-                filepath=cfg.extract_feat_path, level="frame")
-
-        # data loader for frames in ingle video
-        data_loader = get_dataloader(dataset="VideoFrame",
-                                     path=cfg.video_file,
-                                     num_frames=cfg.num_frames,
-                                     batch_size=cfg.batch_size)
-
-        # extract features by inception_v3
-        feats = None
-        for step, frames in enumerate(data_loader):
-            print("extracting feature [{}/{}]".format(step + 1,
-                                                      len(data_loader)))
-            feat = model(make_variable(frames))
-            feat_np = feat.data.cpu().numpy()
-            # recude dimensions by PCA
-            feat_ = pca.transform(feat_np)
-            feats = concat_feat(feats, feat_)
-
-        # write features into TFRecord
-        vid = os.path.splitext(os.path.basename(cfg.video_file))[0]
-        writer.write(vid=vid, feat_rgb=feats)
+                save_counter += 1
+                writer = RecordWriter(
+                    filepath=cfg.extract_feat_path.format(save_counter),
+                    level="frame")
