@@ -41,13 +41,13 @@ def concat_feat_var(src, tgt):
     return out
 
 
-def get_dataloader(dataset, path, num_frames=360, batch_size=32):
+def get_dataloader(dataset, path, num_frames=300, batch_size=32, vid=None):
     """Get dataset loader."""
     # get dataset
     if dataset == "FrameImage":
         pre_process = transforms.Compose([transforms.Scale([299, 299]),
                                           transforms.ToTensor()])
-        frame_dataset = FrameImage(path, pre_process)
+        frame_dataset = FrameImage(path, pre_process, vid)
     elif dataset == "VideoFrame":
         pre_process = transforms.Compose([transforms.ToPILImage(),
                                           transforms.Scale([299, 299]),
@@ -58,7 +58,7 @@ def get_dataloader(dataset, path, num_frames=360, batch_size=32):
     frame_data_loader = torch.utils.data.DataLoader(
         dataset=frame_dataset,
         batch_size=batch_size,
-        shuffle=True)
+        shuffle=False)
 
     return frame_data_loader
 

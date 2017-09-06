@@ -18,9 +18,10 @@ IMG_EXTENSIONS = [
 class FrameImage(data.Dataset):
     """Dataset for video frames from folders."""
 
-    def __init__(self, root, transform=None):
+    def __init__(self, root, transform=None, vid=None):
         """Init FrameImage dataset."""
         super(FrameImage, self).__init__()
+        self.vid = vid
         images = self.list_image_files(root)
         if len(images) == 0:
             raise(RuntimeError(
@@ -38,6 +39,9 @@ class FrameImage(data.Dataset):
         image = self.loader(path)
         if self.transform is not None:
             image = self.transform(image)
+        # filename = os.path.splitext(os.path.basename(path))[0]
+        # vid = filename.split("-")[0]
+        # fid = filename.split("-")[1]
         return image
 
     def __len__(self):
@@ -56,8 +60,10 @@ class FrameImage(data.Dataset):
         for root, sub, filenames, in sorted(os.walk(data_dir)):
             for filename in filenames:
                 if self.is_image_file(filename):
-                    path = os.path.join(root, filename)
-                    images.append(path)
+                    if (self.vid is not None and self.vid in filename) or \
+                            (self.vid is None):
+                        path = os.path.join(root, filename)
+                        images.append(path)
         return images
 
     def pil_loader(self, path):
