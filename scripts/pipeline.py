@@ -53,6 +53,8 @@ def extract(model, filepath, vid):
     print("--> save feats to {}"
           .format(cfg.inception_v3_feats_path.format(vid)))
     torch.save(feats, cfg.inception_v3_feats_path.format(vid))
+    print("--> delete original video file: {}".format(filepath))
+    os.remove(filepath)
 
 
 if __name__ == '__main__':
