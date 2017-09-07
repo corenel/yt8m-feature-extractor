@@ -11,7 +11,7 @@ video_root = os.path.join(root, "video")
 frame_root = os.path.join(root, "frame")
 record_root = os.path.join(root, "tf")
 video_ext = [".mp4"]
-video_file = os.path.join("data/videos/005Go8GHXNI.mp4")
+video_file = os.path.join(video_root, "0za00IG9Ogs.mp4")
 num_frames = 300
 batch_size = 32
 

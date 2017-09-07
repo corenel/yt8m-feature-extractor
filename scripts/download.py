@@ -50,16 +50,16 @@ if __name__ == '__main__':
             f_path = cfg.inception_v3_feats_path.format(result.vid)
             if os.path.exists(v_path) or os.path.exists(f_path):
                 print("--> skipping {}".format(result.vid))
-            else:
-                try:
-                    # get video info
-                    url = "https://www.youtube.com/watch?v={}" \
-                        .format(result.vid)
-                    video = pafy.new(url)
-                    if is_valid(video):
-                        # download video
-                        video_file = download(video, cfg.video_root,
-                                              result.vid)
-                except:
-                    print("--> error occurs! skipping {}".format(result.vid))
-                    continue
+                continue
+            try:
+                # get video info
+                url = "https://www.youtube.com/watch?v={}" \
+                    .format(result.vid)
+                video = pafy.new(url)
+                if is_valid(video):
+                    # download video
+                    video_file = download(video, cfg.video_root,
+                                          result.vid)
+            except:
+                print("--> error occurs! skipping {}".format(result.vid))
+                continue

@@ -27,10 +27,15 @@ class RecordWriter(object):
             # feat_audio = [encode(f) for f in feat_audio]
 
             # Non-serial data uses Feature
-            context = tf.train.Features(feature={
-                "video_id": self._bytes_feature(vid.encode()),
-                "labels": self._int64_list_feature(labels)
-            })
+            if labels is None:
+                context = tf.train.Features(feature={
+                    "video_id": self._bytes_feature(vid.encode()),
+                })
+            else:
+                context = tf.train.Features(feature={
+                    "video_id": self._bytes_feature(vid.encode()),
+                    "labels": self._int64_list_feature(labels)
+                })
             # Serial data uses FeatureLists
             feature_lists = tf.train.FeatureLists(feature_list={
                 "rgb": self._bytes_feature_list(feat_rgb_encoded),
