@@ -3,7 +3,8 @@
 import os
 
 # general
-root = "/media/m/E/download/"
+#  root = "/media/m/E/download/"
+root = "/Volumes/Document/Datasets/download/"
 
 # config for dataset
 video_ext = [".mp4"]

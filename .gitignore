@@ -2,6 +2,9 @@
 data
 snapshots
 
+# virtualenv
+yt8m-env
+
 # Trash
 .DS_Store
 

@@ -7,6 +7,7 @@ import pafy
 import tensorflow as tf
 
 import init_path
+from misc import config as cfg
 from misc.reader import Reader
 
 # from youtube_dl.utils import DownloadError, ExtractorError
@@ -29,36 +30,36 @@ def download(video, save_dir, vid):
                               "{}.{}".format(vid, best.extension)))
     print("saved to {}".format(filename))
 
-
-def parse():
-    """Parse args."""
-    parser = argparse.ArgumentParser(
-        description="Read TFRecord and download corresponding youtube video")
-    parser.add_argument('filepath',
-                        help='path for TFRecord file')
-    parser.add_argument("-o", '--save-dir', default='data/videos/',
-                        help="path to save downloaded videos")
-    args = parser.parse_args()
-
-    return args
+    return os.path.join(save_dir, "{}.{}".format(vid, best.extension))
 
 
 if __name__ == '__main__':
-    args = parse()
-    for record_file in os.listdir(args.filepath):
-        for record in tf.python_io.tf_record_iterator(
-                os.path.join(args.filepath, record_file)):
+    record_root = cfg.record_root
+    # record_root = "/media/m/E/yt8m_video_level/train/"
+    for record_file in os.listdir(record_root):
+        if os.path.splitext(record_file)[1] != ".tfrecord":
+            continue
+        iterator = tf.python_io.tf_record_iterator(
+            os.path.join(record_root, record_file))
+        for record in iterator:
             result = Reader(record)
-            if os.path.exists(
-                    os.path.join(args.save_dir, "{}.mp4".format(result.vid))):
-                print("skipping {}".format(result.vid))
+            print("Processing {}".format(result.vid))
+            # skip existed files
+            v_path = os.path.join(cfg.video_root,
+                                  "{}.mp4".format(result.vid))
+            f_path = cfg.inception_v3_feats_path.format(result.vid)
+            if os.path.exists(v_path) or os.path.exists(f_path):
+                print("--> skipping {}".format(result.vid))
             else:
                 try:
-                    url = "https://www.youtube.com/watch?v={}".format(
-                        result.vid)
+                    # get video info
+                    url = "https://www.youtube.com/watch?v={}" \
+                        .format(result.vid)
                     video = pafy.new(url)
                     if is_valid(video):
-                        download(video, args.save_dir, result.vid)
+                        # download video
+                        video_file = download(video, cfg.video_root,
+                                              result.vid)
                 except:
-                    print("error occurs! skipping {}".format(result.vid))
+                    print("--> error occurs! skipping {}".format(result.vid))
                     continue
