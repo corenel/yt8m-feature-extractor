@@ -3,14 +3,14 @@
 import os
 
 # general
-#  root = "/media/m/E/download/"
-root = "/Volumes/Document/Datasets/download/"
+root = "/media/m/E/download/"
+# root = "/Volumes/Document/Datasets/download/"
 
 # config for dataset
-video_ext = [".mp4"]
 video_root = os.path.join(root, "video")
 frame_root = os.path.join(root, "frame")
 record_root = os.path.join(root, "tf")
+video_ext = [".mp4"]
 video_file = os.path.join("data/videos/005Go8GHXNI.mp4")
 num_frames = 300
 batch_size = 32
@@ -30,3 +30,10 @@ pca_model = os.path.join(root, "snapshots", "pca_params.pkl")
 extract_feat_path = os.path.join(
     root, "extracted_feats", "train-{:0004}.tfrecord")
 feats_per_file = 300
+
+# config for labels
+csv_root = os.path.join(root, "csv")
+vocab_url = "https://research.google.com/youtube8m/csv/vocabulary.csv"
+vocab_path = os.path.join(csv_root, "vocabulary.csv")
+pred_path = os.path.join(csv_root, "pred.csv")
+top_k = 5
