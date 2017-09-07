@@ -1,4 +1,4 @@
-"""Extract inception_v3_feats for Youtube-8M feature extractor."""
+"""Extract inception_v3_feats from images for Youtube-8M feature extractor."""
 
 import os
 
