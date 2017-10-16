@@ -1,8 +1,8 @@
-torch
-torchvision
+# torch
+# torchvision
 tensorflow
-numpy
-pafy
-youtube-dl
-sk-video
-scikit-learn
+# numpy
+# pafy
+# youtube-dl
+# sk-video
+# scikit-learn

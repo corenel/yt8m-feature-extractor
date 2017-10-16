@@ -3,7 +3,7 @@
 import numpy as np
 import tensorflow as tf
 
-from misc.utils import dequantize, resize_axis
+#  from misc.utils import dequantize, resize_axis
 
 
 class Reader(object):
@@ -25,9 +25,11 @@ class Reader(object):
         feature = result.features.feature
         self.vid = feature["video_id"].bytes_list.value[0].decode("utf-8")
         self.labels = list(feature["labels"].int64_list.value)
-        self.feat_rgb = np.array(list(feature["mean_rgb"].float_list.value))
-        self.feat_audio = np.array(
-            list(feature["mean_audio"].float_list.value))
+        #  self.feat_rgb = np.array(list(feature["mean_rgb"].float_list.value))
+        self.feat_rgb = list(feature["mean_rgb"].float_list.value)
+        #  self.feat_audio = np.array(
+            #  list(feature["mean_audio"].float_list.value))
+        self.feat_audio = list(feature["mean_audio"].float_list.value)
 
 
 class RecordReader(object):

@@ -1,6 +1,21 @@
 # yt8m-feature-extractor
 Extract features from video file as the format in Youtube-8M.
 
+## Special usage for converter
+```shell
+python3 scripts/converter.py [-h] [-o OUTPUT] filepath
+
+Read TFRecord and check its validation
+
+positional arguments:
+  filepath              folder path for TFRecord file
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o OUTPUT, --output OUTPUT
+                        output path
+```
+
 ## Description
 
 - `scripts/download.py`: download videos from YouTube corresponding to the TFRecord file.
