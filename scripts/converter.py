@@ -26,7 +26,7 @@ if __name__ == '__main__':
     args = parse()
 
     # create blank output
-    if os.path.exist(os.path.dirname(args.output)):
+    if os.path.exists(os.path.dirname(args.output)):
         os.makedirs(os.path.dirname(args.output))
 
     # convert record
