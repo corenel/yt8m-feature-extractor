@@ -1,6 +1,11 @@
 # yt8m-feature-extractor
 Extract features from video file as the format in Youtube-8M.
 
+**Note**
+Google now share [their own feature extractor](https://github.com/google/youtube-8m/tree/master/feature_extractor) with pre-trained model. That'd better to use theirs.
+
+
+
 ## Description
 
 - `scripts/download.py`: download videos from YouTube corresponding to the TFRecord file.
